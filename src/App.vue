@@ -71,6 +71,7 @@ onMounted(() => {
   top: 0;
   user-select: none;
   pointer-events: none;
+  // display: flex;
   overflow: hidden;
   background: url("@/assets/image/page_bg.png") no-repeat center center/100%
     100%;
@@ -93,7 +94,20 @@ onMounted(() => {
       background: url("@/assets/image/page_shadow.png") no-repeat center
         center/100% 100%;
     }
-
+    .wrapper {
+      padding: 0 0.5rem;
+      width: 100%;
+      display: flex;
+      margin-top: 0.875rem;
+      // position: relative;
+      justify-content: space-between;
+      box-sizing: border-box;
+      pointer-events: none;
+      .left,
+      .right {
+        pointer-events: auto;
+      }
+    }
     .footer {
       width: calc(100% - 9.75rem);
       position: absolute;

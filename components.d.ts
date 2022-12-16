@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    CardChunk: typeof import('./src/components/chart/CardChunk.vue')['default']
     ChartDefine: typeof import('./src/components/chart/ChartDefine.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     PageList: typeof import('./src/components/chart/pageList.vue')['default']
