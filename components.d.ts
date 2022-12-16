@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ChartDefine: typeof import('./src/components/chart/ChartDefine.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    PageList: typeof import('./src/components/chart/pageList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

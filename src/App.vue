@@ -17,6 +17,9 @@
           <component :is="Component"></component>
         </Transition>
       </RouterView>
+      <div class="footer">
+        <page-list></page-list>
+      </div>
     </section>
   </main>
 </template>
@@ -33,7 +36,7 @@ if (href.length > 2 && href != "#/home") router.push("/home");
 
 onMounted(() => {
   if (href.length > 2) {
-    console.log(href)
+    console.log(href);
     nextTick(() => {
       loading.value = false;
     });
@@ -42,8 +45,8 @@ onMounted(() => {
 </script>
 
 <style lang="less">
-@import 'element-plus/theme-chalk/base.css';
-@import 'element-plus/theme-chalk/el-loading.css';
+@import "element-plus/theme-chalk/base.css";
+@import "element-plus/theme-chalk/el-loading.css";
 .canvasBox {
   width: 100%;
   height: 100%;
@@ -69,7 +72,8 @@ onMounted(() => {
   user-select: none;
   pointer-events: none;
   overflow: hidden;
-  background: url("@/assets/image/page_bg.png") no-repeat center center/100% 100%;
+  background: url("@/assets/image/page_bg.png") no-repeat center center/100%
+    100%;
 
   .page_wrapper {
     width: 100%;
@@ -77,7 +81,8 @@ onMounted(() => {
     position: absolute;
     top: 0;
     left: 0;
-    background: url("@/assets/image/page_shadow.png") no-repeat center center/100% 100%;
+    background: url("@/assets/image/page_shadow.png") no-repeat center
+      center/100% 100%;
     &::before {
       content: "";
       width: 100%;
@@ -85,8 +90,17 @@ onMounted(() => {
       position: absolute;
       top: 0;
       left: 0;
-      background: url("@/assets/image/page_shadow.png") no-repeat center center/100%
-        100%;
+      background: url("@/assets/image/page_shadow.png") no-repeat center
+        center/100% 100%;
+    }
+
+    .footer {
+      width: calc(100% - 9.75rem);
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: auto;
     }
   }
 }
