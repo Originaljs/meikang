@@ -9,20 +9,41 @@
     v-loading="loading"
     element-loading-text="正在加载..."
     element-loading-background="rgba(255, 255, 255, 0.1)"
-  ></main>
+  >
+    <section class="page_wrapper">
+      <mk-header></mk-header>
+      <RouterView v-slot="{ Component }">
+        <Transition>
+          <component :is="Component"></component>
+        </Transition>
+      </RouterView>
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import mkHeader from "@/views/mkHeader.vue";
 const route = useRoute();
 const router = useRouter();
 const loading = ref(true);
 const href = window.location.hash;
-// if (href.length > 2 && href != "#/home") router.push("/home");
+if (href.length > 2 && href != "#/home") router.push("/home");
+
+onMounted(() => {
+  if (href.length > 2) {
+    console.log(href)
+    nextTick(() => {
+      loading.value = false;
+    });
+  }
+});
 </script>
 
 <style lang="less">
+@import 'element-plus/theme-chalk/base.css';
+@import 'element-plus/theme-chalk/el-loading.css';
 .canvasBox {
   width: 100%;
   height: 100%;
@@ -48,6 +69,26 @@ const href = window.location.hash;
   user-select: none;
   pointer-events: none;
   overflow: hidden;
+  background: url("@/assets/image/page_bg.png") no-repeat center center/100% 100%;
+
+  .page_wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url("@/assets/image/page_shadow.png") no-repeat center center/100% 100%;
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: url("@/assets/image/page_shadow.png") no-repeat center center/100%
+        100%;
+    }
+  }
 }
 @keyframes tzdouce {
   0% {

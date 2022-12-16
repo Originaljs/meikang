@@ -4,6 +4,11 @@ const routes = [
         path: "/",
         component: () => import("@/views/guiDance.vue"),
     },
+    {
+        path: '/home',
+        name: 'home',
+        component: () => import("@/views/homePage.vue")
+    }
 ]
 
 const routers = createRouter({
