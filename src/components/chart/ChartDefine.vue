@@ -73,8 +73,11 @@
   const attrs = useAttrs();
   const tooltip = reactive({
     value: {
-      backgroundColor: "rgba(7, 32, 50, .9)",
-      borderColor: "rgba(7, 32, 50, .9)",
+      backgroundColor: "rgba(77, 77, 77, .8)",
+      textStyle: {
+          color: '#cccccc'
+        },
+      borderColor: "rgba(0, 0, 0, .0)",
     },
   });
   const echart =ref(null)

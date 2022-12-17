@@ -6,7 +6,7 @@
     <div class="chunk_wrapper">
       <div class="chunk_title">
         <div class="arrow"></div>
-        <div>
+        <div class="title_content">
           <span>{{ title }}</span>
           <img
             :src="icon"
@@ -15,14 +15,14 @@
             @click="emit('iconClick')"
             class="title_icon"
           />
-          <div
+          <button
             v-if="moreText"
             :style="{ color: moreColor }"
             @click="emit('moreClick')"
             class="more"
           >
             {{ moreText }}
-          </div>
+          </button>
         </div>
       </div>
       <div class="chunk_content">
@@ -120,6 +120,7 @@ const emit = defineEmits(["iconClick", "moreClick"]);
         rgba(0, 0, 2, 0) 100%
       );
       display: flex;
+      box-sizing: border-box;
       justify-content: space-between;
       &::after {
         content: "";
@@ -163,19 +164,28 @@ const emit = defineEmits(["iconClick", "moreClick"]);
           transform: translate(-50%, -50%);
         }
       }
-      .title_icon {
-        width: 18px;
-        height: 18px;
-        margin-left: 22px;
-        vertical-align: center;
-      }
-      .more{
-        font-size: .15rem;
-        font-weight: 400;
-        background: transparent;
-        border: none;
-        outline: none;
-        color: #999;
+
+      .title_content{
+        display: flex;
+        justify-content: space-between;
+        .title_icon {
+          width: 18px;
+          height: 18px;
+          margin-left: 22px;
+          vertical-align: center;
+        }
+        .more{
+          position: absolute;
+          right: 0;
+          font-size: .15rem;
+          top: 0.05rem;
+          font-weight: 400;
+          background: transparent;
+          border: none;
+          outline: none;
+          color: #999;
+          // margin-left: 18px;
+        }
       }
     }
     .chunk_content {
