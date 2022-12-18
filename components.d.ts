@@ -10,6 +10,7 @@ declare module '@vue/runtime-core' {
     CardChunk: typeof import('./src/components/chart/CardChunk.vue')['default']
     ChartDefine: typeof import('./src/components/chart/ChartDefine.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    MarQuee: typeof import('./src/components/chart/MarQuee.vue')['default']
     MkVideo: typeof import('./src/components/MkVideo.vue')['default']
     PageList: typeof import('./src/components/chart/pageList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -10,9 +10,24 @@ const routes = [
         component: () => import("@/views/homePage.vue")
     },
     {
-        path:'/ventilate',
-        name:'ventilate',
-        component:()=>import("@/views/VentilateSystem.vue")
+        path: '/ventilate',
+        name: 'ventilate',
+        component: () => import("@/views/VentilateSystem.vue")
+    },
+    {
+        path: '/fan',
+        name: 'fan',
+        component: () => import("@/views/AirPressure.vue")
+    },
+    {
+        path: '/transport',
+        name: 'transport',
+        component: () => import("@/views/TransportSystem.vue")
+    },
+    {
+        path: '/drainageSystem',
+        name: 'drainageSystem',
+        component: () => import("@/views/DrainageSystem.vue")
     }
 ]
 

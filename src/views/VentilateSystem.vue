@@ -48,7 +48,36 @@
       </card-chunk>
     </section>
     <section class="right">
-      <card-chunk title="变频器电流" style="height: 3.675rem"></card-chunk>
+      <card-chunk title="变频器电流" style="height: 3.675rem">
+        <div class="bp_content">
+          <div class="bp_left">
+            <img
+              src="@/assets/image/smartMining/display-pie-back1.png"
+              alt=""
+            />
+            <div class="text_cneter">182A</div>
+            <div class="text_bottom">当前电流</div>
+          </div>
+          <div class="bp_right">
+            <div class="bp_right_item">
+              <span class="bp_right_text">主电路</span
+              ><span class="circle"></span>
+            </div>
+            <div class="bp_right_item red">
+              <span class="bp_right_text">整流器</span
+              ><span class="circle"></span>
+            </div>
+            <div class="bp_right_item">
+              <span class="bp_right_text">逆变器</span
+              ><span class="circle"></span>
+            </div>
+            <div class="bp_right_item">
+              <span class="bp_right_text">平波回路</span
+              ><span class="circle"></span>
+            </div>
+          </div>
+        </div>
+      </card-chunk>
       <card-chunk
         title="时域分析"
         style="height: 4.05rem; margin-top: 0.2375rem"
@@ -271,6 +300,75 @@ const monitorList = markRaw([
         }
         &::after {
           background: #fde128;
+        }
+      }
+    }
+  }
+}
+
+.bp_content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .bp_left {
+    width: 2rem;
+    height: 2rem;
+    position: relative;
+    margin-right: 0.1rem;
+
+    & > img {
+      width: 100%;
+    }
+    .text_cneter {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(50% - 0.15rem);
+      text-align: center;
+      color: #fff;
+      font-size: 0.225rem;
+      font-weight: bold;
+    }
+
+    .text_bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.275rem;
+      text-align: center;
+      color: #fff;
+    }
+  }
+
+  .bp_right {
+    flex: 1;
+
+    .bp_right_item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: url("@/assets/image/ventilate/aq_bg1.png") no-repeat center
+        center / 100% 100%;
+      height: 0.3125rem;
+      padding: 0 0.1875rem 0 0.375rem;
+      margin-top: 0.3rem;
+      .circle {
+        width: 0.095rem;
+        height: 0.095rem;
+        border-radius: 50%;
+        background: #ffe822;
+        box-shadow: 0rem 0rem 0.0625rem #ffe822;
+      }
+      .bp_right_text {
+        color: #fff;
+      }
+      &.red {
+        background: url("@/assets/image/ventilate/aq_bg2.png") no-repeat center
+          center/100% 100%;
+        .circle {
+          background: #f00412;
+          box-shadow: 0rem 0rem 0.0625rem #f00412;
         }
       }
     }
