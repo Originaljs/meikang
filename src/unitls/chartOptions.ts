@@ -2834,5 +2834,501 @@ export const echart = {
                 data: [800, 240, 1100, 700, 400, 1200, 800]
             }]
         }
-    }
+    },
+    seriesLine1() {
+        return {
+            color: ["#F08C04", "#B9D8FF"],
+            grid: {
+                bottom: "3%",
+                top: "15%",
+                left: "3%",
+                right: "5%",
+                containLabel: true,
+            },
+            tooltip: {
+                trigger: "axis",
+            },
+            legend: {
+                data: ["自动", "手动"],
+                right: 0,
+                icon: "rect",
+                itemWidth: 6,
+                itemHeight: 6,
+                textStyle: {
+                    color: "#FFF",
+                },
+            },
+            yAxis: {
+                type: "value",
+                // name: "单位：万吨",
+                nameTextStyle: {
+                    color: "#FEFEFE",
+                    fontSize: 12,
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisLabel: {
+                    color: "#ffffff",
+                    fontSize: 12,
+                },
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisTick: {
+                    show: false,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+            },
+            xAxis: {
+                type: "category",
+                data: ["0", "10", "20", "30", "40", "100"],
+                splitLine: {
+                    show: false,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisLabel: {
+                    color: "#ffffff",
+                    fontSize: 12,
+                },
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisTick: {
+                    show: false,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                boundaryGap: false,
+            },
+            series: [
+                {
+                    type: "line",
+                    name: "自动",
+                    data: [340, 280, 290, 350, 410, 380],
+                    symbol: "none",
+                    smooth: true,
+                    lineStyle: {
+                        width: 1.5,
+                        shadowColor: "#F08C04",
+                        shadowBlur: 8,
+                    },
+                },
+                {
+                    type: "line",
+                    name: "手动",
+                    data: [240, 180, 250, 250, 310, 280],
+                    symbol: "none",
+                    smooth: true,
+                    lineStyle: {
+                        width: 1.5,
+                        shadowColor: "#B9D8FF",
+                        shadowBlur: 8,
+                    },
+                },
+            ],
+        };
+    },
+    seriesLine6() {
+        return {
+            color: ["#6186FF", "#FFFFFF"],
+            grid: {
+                bottom: "3%",
+                top: "15%",
+                left: "3%",
+                right: "5%",
+                containLabel: true,
+            },
+            tooltip: {
+                trigger: "axis",
+            },
+            legend: {
+                data: ["温度", "电流"],
+                right: 0,
+                icon: "rect",
+                itemWidth: 6,
+                itemHeight: 6,
+                textStyle: {
+                    color: "#FFF",
+                },
+            },
+            yAxis: {
+                type: "value",
+                // name: "单位：万吨",
+                nameTextStyle: {
+                    color: "#FEFEFE",
+                    fontSize: 12,
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisLabel: {
+                    color: "#ffffff",
+                    fontSize: 12,
+                },
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisTick: {
+                    show: false,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+            },
+            xAxis: {
+                type: "category",
+                data: ["0", "10", "20", "30", "40", "100"],
+                splitLine: {
+                    show: false,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisLabel: {
+                    color: "#ffffff",
+                    fontSize: 12,
+                },
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                axisTick: {
+                    show: false,
+                    lineStyle: {
+                        color: "#FFD5A0",
+                        opacity: 0.2,
+                    },
+                },
+                boundaryGap: false,
+            },
+            series: [
+                {
+                    type: "line",
+                    name: "温度",
+                    data: [340, 280, 290, 350, 410, 380],
+                    symbol: "none",
+                    smooth: true,
+                    lineStyle: {
+                        width: 1.5,
+                        shadowColor: "#6186FF",
+                        shadowBlur: 8,
+                    },
+                },
+                {
+                    type: "line",
+                    name: "电流",
+                    data: [240, 180, 250, 250, 310, 280],
+                    symbol: "none",
+                    smooth: true,
+                    lineStyle: {
+                        width: 1.5,
+                        shadowColor: "#FFFFFF",
+                        shadowBlur: 8,
+                    },
+                },
+            ],
+        };
+    },
+    serieslineR1() {
+        let data = [
+            {
+                name: "01",
+                dataKey1: 72,
+                dataKey2: 82,
+                dataKey3: 92,
+                dataKey4: 98,
+            },
+            {
+                name: "02",
+                dataKey1: 77,
+                dataKey2: 87,
+                dataKey3: 97,
+                dataKey4: 103,
+            },
+            {
+                name: "03",
+                dataKey1: 82,
+                dataKey2: 92,
+                dataKey3: 102,
+                dataKey4: 108,
+            },
+            {
+                name: "04",
+                dataKey1: 72,
+                dataKey2: 82,
+                dataKey3: 92,
+                dataKey4: 98,
+            },
+        ];
+        let legendData = ["业务数", "未登筹", "已登", "退件"]; //图例
+        let dataNames: any = [],
+            dataArr1: any = [],
+            dataArr2: any = [],
+            dataArr3: any = [],
+            dataArr4: any = [];
+        data.map((item) => {
+            dataNames.push(item.name);
+            dataArr1.push(item.dataKey1);
+            dataArr2.push(item.dataKey2);
+            dataArr3.push(item.dataKey3);
+            dataArr4.push(item.dataKey4);
+        });
+        const colorList = ["#FF8E2B", "#ffffff", "#52AFFE", "#FF9846"];
+        function hexToRgba(hex: any, opacity: any) {
+            return `rgba(${parseInt("0x" + hex.slice(1, 3))},
+            ${parseInt("0x" + hex.slice(3, 5))},
+            ${parseInt("0x" + hex.slice(5, 7))},${opacity})`;
+        }
+        let option = {
+            grid: {
+                top: "12%",
+                left: "3%",
+                right: "3%",
+                bottom: "5%",
+                containLabel: true,
+            },
+            tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                    type: "line",
+                },
+            },
+            legend: {
+                left: "center",
+                // top: 10,
+                // icon: "roundRect",
+                data: legendData,
+                // itemGap: 25,
+                itemWidth: 24,
+                itemHeight: 8,
+                // //图例文字样式
+                textStyle: {
+                    color: "#fff",
+                    fontSize: 12,
+                },
+                // itemStyle: {
+                //   borderWidth: 1,
+                // },
+            },
+            xAxis: [
+                {
+                    type: "category",
+                    axisTick: {
+                        show: false,
+                    },
+                    interval: 1,
+                    axisLabel: {
+                        color: "#fff",
+                        fontSize: 14,
+                    },
+                    axisLine: {
+                        show: false,
+                    },
+                    boundaryGap: false,
+                    data: dataNames,
+                },
+            ],
+            yAxis: [
+                {
+                    type: "value",
+                    name: "",
+                    axisLabel: {
+                        color: "#fff",
+                        fontSize: 14,
+                    },
+                    //坐标轴线样式
+                    splitLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "rgba(255,255,255,0.2)",
+                        },
+                    },
+                    axisLine: {
+                        show: true,
+                        lineStyle: {
+                            color: "rgba(255,255,255,0.2)",
+                        },
+                    },
+                },
+            ],
+            series: [
+                {
+                    name: "业务数",
+                    data: dataArr1,
+                    type: "line",
+                    smooth: true, //true曲线; false折线
+                    itemStyle: {
+                        color: hexToRgba(colorList[0], 1), //改变折线点的颜色
+                        opacity: 0.6,
+                        lineStyle: {
+                            color: hexToRgba(colorList[0], 1), //改变折线颜色
+                            type: "solid",
+                        },
+                    },
+                    areaStyle: {
+                        //折线图颜色半透明
+                        color: {
+                            type: "linear",
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [
+                                {
+                                    offset: 0,
+                                    color: hexToRgba(colorList[0], 0.3), // 0% 处的颜色
+                                },
+                                {
+                                    offset: 1,
+                                    color: hexToRgba(colorList[0], 0), // 100% 处的颜色
+                                },
+                            ],
+                            global: false, // 缺省为 false
+                        },
+                    },
+                },
+                {
+                    name: "未登筹",
+                    data: dataArr2,
+                    type: "line",
+                    smooth: true, //true曲线; false折线
+                    itemStyle: {
+                        color: hexToRgba(colorList[1], 1), //改变折线点的颜色
+                        opacity: 0.6,
+                    },
+                    lineStyle: {
+                        color: hexToRgba(colorList[1], 1), //改变折线点的颜色
+                        // color: hexToRgba(colorList[1], 1), //改变折线颜色
+                        type: "solid",
+                    },
+                    areaStyle: {
+                        //折线图颜色半透明
+                        color: {
+                            type: "linear",
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [
+                                {
+                                    offset: 0,
+                                    color: hexToRgba(colorList[1], 0.3), // 0% 处的颜色
+                                },
+                                {
+                                    offset: 1,
+                                    color: hexToRgba(colorList[1], 0), // 0% 处的颜色
+                                },
+                            ],
+                            global: false, // 缺省为 false
+                        },
+                    },
+                },
+                {
+                    name: "已登",
+                    data: dataArr3,
+                    type: "line",
+                    smooth: true, //true曲线; false折线
+                    itemStyle: {
+                        color: hexToRgba(colorList[2], 1), //改变折线点的颜色
+                        opacity: 0.6,
+                    },
+                    lineStyle: {
+                        color: hexToRgba(colorList[2], 1), //改变折线点的颜色
+                        // color: hexToRgba(colorList[1], 1), //改变折线颜色
+                        type: "solid",
+                    },
+                    areaStyle: {
+                        //折线图颜色半透明
+                        color: {
+                            type: "linear",
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [
+                                {
+                                    offset: 0,
+                                    color: hexToRgba(colorList[2], 0.3), // 0% 处的颜色
+                                },
+                                {
+                                    offset: 1,
+                                    color: hexToRgba(colorList[2], 0), // 0% 处的颜色
+                                },
+                            ],
+                            global: false, // 缺省为 false
+                        },
+                    },
+                },
+                {
+                    name: "退件",
+                    data: dataArr4,
+                    type: "line",
+                    smooth: true, //true曲线; false折线
+                    itemStyle: {
+                        color: hexToRgba(colorList[3], 1), //改变折线点的颜色
+                        opacity: 0.6,
+                    },
+                    lineStyle: {
+                        color: hexToRgba(colorList[3], 1), //改变折线点的颜色
+                        // color: hexToRgba(colorList[1], 1), //改变折线颜色
+                        type: "solid",
+                    },
+                    areaStyle: {
+                        //折线图颜色半透明
+                        color: {
+                            type: "linear",
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [
+                                {
+                                    offset: 0,
+                                    color: hexToRgba(colorList[3], 0.3), // 0% 处的颜色
+                                },
+                                {
+                                    offset: 1,
+                                    color: hexToRgba(colorList[3], 0), // 0% 处的颜色
+                                },
+                            ],
+                            global: false, // 缺省为 false
+                        },
+                    },
+                },
+            ],
+        };
+        return option;
+    },
 };

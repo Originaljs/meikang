@@ -28,6 +28,16 @@ const routes = [
         path: '/drainageSystem',
         name: 'drainageSystem',
         component: () => import("@/views/DrainageSystem.vue")
+    },
+    {
+        path: '/gasExtraction',
+        name: 'gasExtraction',
+        component: () => import("@/views/GasExtraction.vue")
+    },
+    {
+        path: '/smartMining',
+        name: 'smartMining',
+        component: () => import("@/views/SmartMining.vue")
     }
 ]
 
