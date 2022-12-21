@@ -38,6 +38,16 @@ const routes = [
         path: '/smartMining',
         name: 'smartMining',
         component: () => import("@/views/SmartMining.vue")
+    },
+    {
+        path: '/safe',
+        name: 'safe',
+        component: () => import("@/views/SafeTest.vue")
+    },
+    {
+        path: '/staff',
+        name: 'staff',
+        component: () => import("@/views/StaffPositon.vue")
     }
 ]
 

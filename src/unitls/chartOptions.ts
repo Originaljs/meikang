@@ -3331,4 +3331,213 @@ export const echart = {
         };
         return option;
     },
+    seriesBar3() {
+        return {
+            grid: {
+                top: 0,
+                left: 45,
+                right: 45,
+                bottom: 0
+            },
+            yAxis: [{
+                type: 'category',
+                data: ['人为'],
+                axisLabel: {
+                    color: '#fff',
+                    fontSize: 12
+                },
+                axisLine: {
+                    show: false
+                }
+            }, {
+                type: 'category',
+                data: ['非人为'],
+                axisLabel: {
+                    color: '#fff',
+                    fontSize: 12
+                },
+                axisLine: {
+                    show: false
+                }
+            }],
+            xAxis: [{
+                type: 'value',
+                min: -100,
+                max: 100,
+                splitLine: {
+                    show: false
+                }
+            }],
+            series: [{
+                name: '非人为',
+                type: 'bar',
+                barWidth: 12,
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(255, 154, 38, .2)',
+                    borderRadius: [2, 0, 0, 2]
+                },
+                label: {
+                    show: true,
+                    position: 'right',
+                    color: '#fff',
+                    verticalAlign: 'middle',
+                    fontSize: 10,
+                    formatter(params: any) {
+                        return Math.abs(params.value) + '%'
+                    }
+                },
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 1,
+                        y: 0,
+                        x2: 0,
+                        y2: 0,
+                        colorStops: [{
+                            offset: 1, color: 'rgba(255, 154, 38, .2)' // 0% 处的颜色
+                        }, {
+                            offset: 0, color: 'rgba(255, 154, 38, 1)' // 0% 处的颜色
+                        }]
+                    }
+                },
+                data: [20]
+            }, {
+                name: '人为',
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(196, 223, 255, .2)',
+                    borderRadius: [2, 0, 0, 2]
+                },
+                barWidth: 12,
+                barGap: '-100%',
+                label: {
+                    show: true,
+                    position: 'left',
+                    color: '#fff',
+                    fontSize: 10,
+                    verticalAlign: 'middle',
+                    formatter(params: any) {
+                        return Math.abs(params.value) + '%'
+                    }
+                },
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 1,
+                        y: 0,
+                        x2: 0,
+                        y2: 0,
+                        colorStops: [{
+                            offset: 0, color: 'rgba(196, 223, 255, 0.2)' // 0% 处的颜色
+                        }, {
+                            offset: 1, color: 'rgba(196, 223, 255, 1)' // 0% 处的颜色
+                        }]
+                    }
+                },
+                data: [-80]
+            }]
+        }
+    },
+    seriesline7() {
+        const data = [{
+            name: '爆尘事故',
+            value: 60
+        }, {
+            name: '其他事故',
+            value: 90
+        }, {
+            name: '运输事故',
+            value: 82
+        }, {
+            name: '水灾事故',
+            value: 69
+        }, {
+            name: '瓦斯事故',
+            value: 22
+        }, {
+            name: '火灾事故',
+            value: 75
+        }]
+        const ahData = data.map(item => item.name);
+        data.push(data[0])
+        return {
+            tooltip: {
+                show: true,
+                trigger: 'axis',
+                textStyle: {
+                    fontSize: 12,
+                }
+            },
+            polar: {
+                center: ['50%', '50%'],
+                radius: '55%'
+            },
+            angleAxis: {
+                type: 'category',
+                data: ahData,
+                boundaryGap: true,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: 'rgba(255,255,255,0.2)'
+                    }
+                },
+                axisLabel: {
+                    fontSize: 12,
+                    color: '#ffffff',
+                    align: 'center',
+                    formatter: function (value: any, index: any) {
+                        return data[index].value + '%' + '\n' + value;
+                    }
+                }
+            },
+            radiusAxis: [{
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: 'rgba(255,255,255,0.2)'
+                    }
+                },
+                splitArea: {
+                    show: true,
+                    areaStyle: {
+                        color: 'rgba(255,255,255,.2)'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLine: {
+                    show: false
+                },
+                axisLabel: {
+                    fontSize: 10,
+                    color: '#ffffff',
+                    align: 'right',
+                    formatter: '{value}%'
+                }
+            }],
+            series: [
+                {
+                    type: 'line',
+                    data: data,
+                    symbol: 'none',
+                    coordinateSystem: 'polar',
+                    name: '申请数量',
+                    lineStyle: {
+                        color: 'rgba(215, 234, 255, 1)',
+                        width: 1
+                    },
+                    areaStyle: {
+                        color: 'rgba(215, 234, 255, .3)'
+                    },
+                }
+            ]
+        }
+    }
 };

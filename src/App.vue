@@ -1,6 +1,6 @@
 <template>
   <div class="canvasBox">
-    <canvas class="t-canvas"></canvas>
+    <canvas class="t-canvas" ref="tCanvas"></canvas>
   </div>
   <RouterView v-if="route.path == '/'"></RouterView>
   <main
@@ -28,17 +28,21 @@
 import { ref, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import mkHeader from "@/views/mkHeader.vue";
+import { scene } from "./3d";
 const route = useRoute();
 const router = useRouter();
 const loading = ref(true);
 const href = window.location.hash;
+const tCanvas = ref(null);
 if (href.length > 2 && href != "#/home") router.push("/home");
 
 onMounted(() => {
   if (href.length > 2) {
     console.log(href);
     nextTick(() => {
-      loading.value = false;
+      scene.sceneOnLoad(tCanvas.value!, () => {
+        loading.value = false;
+      });
     });
   }
 });
@@ -55,11 +59,16 @@ onMounted(() => {
   top: 0;
   z-index: -1;
   overflow: hidden;
+  // pointer-events: none;
 
   .t-canvas {
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
     overflow: hidden;
+    pointer-events: all;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 }
 
@@ -115,6 +124,90 @@ onMounted(() => {
       left: 50%;
       transform: translateX(-50%);
       pointer-events: auto;
+    }
+  }
+}
+.el-overlay,
+.el-loading-mask {
+  pointer-events: auto;
+}
+.mk-popup {
+  background: linear-gradient(
+    90deg,
+    rgba(28, 24, 41, 1) 0%,
+    rgba(0, 0, 2, 1) 100%
+  ) !important;
+  .el-dialog__body {
+    padding: 0 0 0.1625rem !important;
+  }
+  &::before,
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 0.025rem solid;
+    box-sizing: border-box;
+    border-radius: 0.05rem;
+    pointer-events: none;
+  }
+  &::before {
+    left: 0;
+    border-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 0)
+      )
+      2;
+  }
+  &::after {
+    right: 0;
+    border-image: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 0.5)
+      )
+      2;
+  }
+  .el-dialog__header {
+    position: relative;
+    margin-right: 0;
+    &::before,
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 0.025rem solid;
+      box-sizing: border-box;
+      border-radius: 0.05rem;
+      pointer-events: none;
+    }
+    &::before {
+      left: 0;
+      border-image: linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0) 50%,
+          rgba(255, 255, 255, 0.5)
+        )
+        2;
+    }
+    &::after {
+      right: 0;
+      border-image: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0) 50%,
+          rgba(255, 255, 255, 0.5)
+        )
+        2;
     }
   }
 }

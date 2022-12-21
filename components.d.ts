@@ -9,8 +9,11 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     CardChunk: typeof import('./src/components/chart/CardChunk.vue')['default']
     ChartDefine: typeof import('./src/components/chart/ChartDefine.vue')['default']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElInput: typeof import('element-plus/es')['ElInput']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     MarQuee: typeof import('./src/components/chart/MarQuee.vue')['default']
+    MkPopup: typeof import('./src/components/chart/MkPopup.vue')['default']
     MkVideo: typeof import('./src/components/MkVideo.vue')['default']
     PageList: typeof import('./src/components/chart/pageList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
