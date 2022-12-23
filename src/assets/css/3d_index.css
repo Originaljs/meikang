@@ -1,0 +1,35 @@
+.carPlaneUp {
+  width: 180px;
+  height: 110px;
+  background-image: url(../image/planeBG.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.planeBox {
+  width: auto;
+  height: auto;
+  margin: 10px 0px;
+}
+
+.titleName {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.lineName {
+  margin-bottom: 5px;
+  margin-left: 30px;
+}
+
+.lineText {
+  color: rgb(245, 175, 43);
+}
+
+.textF {
+  margin-right: 6px;
+}
+
+.lineTextRed {
+  color: #ff0000;
+}
