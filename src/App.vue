@@ -25,10 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import mkHeader from "@/views/mkHeader.vue";
-import { scene } from "./3d";
+import sceneAPI from "./3d";
 const route = useRoute();
 const router = useRouter();
 const loading = ref(true);
@@ -40,12 +40,44 @@ onMounted(() => {
   if (href.length > 2) {
     console.log(href);
     nextTick(() => {
-      scene.sceneOnLoad(tCanvas.value!, () => {
+      sceneAPI.pageOnload(tCanvas.value!, () => {
         loading.value = false;
       });
     });
   }
 });
+
+watch(
+  () => route.path,
+  (path) => {
+    switch (path) {
+      case "/drainageSystem":
+        sceneAPI.intoWaterPump_3d();
+        break;
+      case "/transport":
+        sceneAPI.intoBeltConveyor_3d();
+        break;
+      case "/gasExtraction":
+        sceneAPI.intoGasPump_3d();
+        break;
+      case "/smartMining":
+        sceneAPI.intoShearer_3d();
+        break;
+      case "/fan":
+        sceneAPI.intoAirCompressor_3d();
+        break;
+      case "/safe":
+        sceneAPI.intoSecurityDetection_3d();
+        break;
+      case "/ventilate":
+        sceneAPI.intoFan_3d();
+        break;
+      case "/staff":
+        sceneAPI.undergroundMineOut_3d();
+        break;
+    }
+  }
+);
 </script>
 
 <style lang="less">

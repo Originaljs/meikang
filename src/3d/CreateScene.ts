@@ -1,5 +1,7 @@
 import * as Bol3d from './main'
 import '@/assets/css/3d_index.css'
+import { iconData, iconDataOpts, fanPlaneData } from './iconData'
+import { AnyAaaaRecord } from 'dns'
 type CarOptions = {
     title: string,
     text1: string,
@@ -8,6 +10,7 @@ type CarOptions = {
     popupScale: number,
     popupRotation: number
 }
+
 export class CreateScene {
     container: any
     PRO_ENV: string
@@ -34,6 +37,26 @@ export class CreateScene {
     shearerObj: any
     JMJObj: any
     minecartTransportObj: any
+    shearerSonObj!: any
+    iconData: Array<any> = iconData
+    mainPlaneObjs: any[] = []
+    peoplePlaneObjs: any[] = []
+    airPlaneObjs: any[] = []
+    securityPlaneObjs: any[] = []
+    waterPlaneObjs: any[] = []
+    gasPumpPlaneObjs: any[] = []
+    beltConveyorPlaneObjs: any[] = []
+    fanPlaneObjs: any[] = []
+    // 内部场景状态
+    mineStatus: boolean = false
+    undergroundMineStatus: boolean = false
+    waterPumpStatus: boolean = false
+    fanStatus: boolean = false
+    airCompressorStatus: boolean = false
+    beltConveyorStatus: boolean = false
+    gasPumpStatus: boolean = false
+    shearerStatus: boolean = false
+    securityStatus: boolean = false
     /**
      * @param publicUrl 3d static resource path
      */
@@ -112,15 +135,15 @@ export class CreateScene {
                     "3d/models/main/JZ-002.glb",
                     "3d/models/main/JZ-005.glb",
                     "3d/models/main/SB.glb",
-                    // "3d/models/main/FJ.glb",
-                    // "3d/models/main/JXKD.glb",
-                    // "3d/models/main/KYJ.glb",
-                    // "3d/models/main/PDYSJ.glb",
-                    // "3d/models/main/WSB.glb",
-                    // "3d/models/main/CMJ.glb",
+                    "3d/models/main/FJ.glb",
+                    "3d/models/main/JXKD.glb",
+                    "3d/models/main/KYJ.glb",
+                    "3d/models/main/PDYSJ.glb",
+                    "3d/models/main/WSB.glb",
+                    "3d/models/main/CMJ.glb",
                     "3d/models/main/dh-c.glb",
-                    // "3d/models/main/JMJ.glb",
-                    // "3d/models/main/YSKC.glb",
+                    "3d/models/main/JMJ.glb",
+                    "3d/models/main/YSKC.glb",
                     "3d/models/main/xfyl.glb",
                 ],
                 outline: {
@@ -315,6 +338,10 @@ export class CreateScene {
                             if (chlid.isMesh) {
 
                             }
+                            if (chlid.type == "Object3D") {
+                                chlid.userData.oldPosition = chlid.position.clone();
+                                this.shearerSonObj = chlid;
+                            }
                         })
 
                     } else if (item.name == 'JMJ') {
@@ -338,6 +365,8 @@ export class CreateScene {
                     }
                 },
                 onLoad: () => {
+                    this.addIcons()
+                    this.addPlaneIcon()
                     this.addMouseEevent()
                     this.water = this.addWater([100, 100], 0x68b6d7, -Math.PI / 2, [-23, 0, 170])
                     this.mainClick.push(this.container.sky)
@@ -477,5 +506,311 @@ export class CreateScene {
         this.orbitTween = new Bol3d.TWEEN.Tween(this.container.orbitControls)
             .to({ target: new Bol3d.Vector3(...point) }, times)
             .start();
-    };
+    }
+    /**
+     * 矿井聚焦
+     */
+    mineFocusOut() {
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.returnOrigin()
+        this.mineStatus = true
+        // this.mainPlaneObjs.forEach((item: any) => {
+        //     item.visible = true;
+        // })
+        this.tweenMoveView([-4429, 0, -52], [-4413, 1096, 118], 1500, () => {
+            this.container.clickObjects = this.mineClick;
+        })
+    }
+    /**
+     * 进入地下矿洞
+     */
+    undergroundMine() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.undergroundMineStatus = true
+        this.container.orbitControls.target.set(-278, 0, 314)
+        this.container.orbitCamera.position.set(-982, 396, 1107)
+        this.container.sky.visible = false
+        // 主场景隐藏
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+
+        // this.landObj.visible = true;
+        this.undergroundMineObj.visible = true
+        this.tweenMoveView([-66, 0, 32], [-238, 262, 387], 800, () => {
+
+            // this.container.clickObjects =[this.underClick]
+        })
+    }
+    /**
+     * 进入水泵场景
+     */
+    intoWaterPump() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.container.clickObjects = [];
+
+        this.waterPumpStatus = true
+        this.container.orbitControls.target.set(-204, -0, 304)
+        this.container.orbitCamera.position.set(-1391, 477, 1475)
+        this.container.sky.visible = false
+
+        this.water.visible = true;
+
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+        this.waterPump.visible = true;
+
+        this.tweenMoveView([-12, -0, 133], [-22, 576, 873], 800, () => { })
+    }
+    /**
+     * 进入风机场景
+     */
+    intoFan() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+
+        this.fanStatus = true
+        this.container.orbitControls.target.set(-428, -0, 440)
+        this.container.orbitCamera.position.set(-1261, 475, 1377)
+        this.container.sky.visible = false
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+        this.fan.visible = true;
+        this.tweenMoveView([9, 0, -78], [-499, 602, 429], 800, () => { })
+    }
+    /**
+     * 进入空压机场景
+     */
+    intoAirCompressor() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.container.clickObjects = [];
+
+        this.airCompressorStatus = true
+        this.container.orbitControls.target.set(-428, -0, 440)
+        this.container.orbitCamera.position.set(-1261, 475, 1377)
+        this.container.sky.visible = false
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+        this.airCompressorObj.visible = true
+
+        this.tweenMoveView([27, 0, -41], [-553, 639, 808], 800, () => {
+            this.airCompressorObj.traverse((child: any) => {
+                if (child.isMesh) {
+                    this.container.clickObjects.push(child)
+                }
+            })
+        })
+    }
+    /**
+     * 皮带运输机
+     */
+    intoBeltConveyor() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.container.clickObjects = [];
+
+        this.beltConveyorStatus = true
+        this.container.orbitControls.target.set(-428, -0, 440)
+        this.container.orbitCamera.position.set(-1261, 475, 1377)
+        this.container.sky.visible = false
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+
+        this.beltConveyorObj.visible = true
+        this.tweenMoveView([78, -0, 56], [-352, 634, 833], 800, () => { })
+    }
+    /**
+     * 瓦斯泵
+     */
+    intoGasPump() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.container.clickObjects = [];
+
+        this.gasPumpStatus = true
+        this.container.orbitControls.target.set(-428, -0, 440)
+        this.container.orbitCamera.position.set(-1261, 475, 1377)
+        this.container.sky.visible = false
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+        this.gasPumpObj.visible = true
+        this.tweenMoveView([-48, -0, 93], [-548, 684, 869], 800, () => { })
+    }
+    /**
+     * 采煤机
+     */
+    intoShearerFor() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+        this.container.clickObjects = [];
+
+        this.shearerStatus = true
+        this.container.orbitControls.target.set(-493, 0, -47)
+        this.container.orbitCamera.position.set(-700, 33, -19)
+        this.container.sky.visible = false
+        this.mainMeshArrs.forEach(item => {
+            item.visible = false;
+        });
+        this.shearerObj.visible = true;
+        this.tweenMoveView([1088, 0, -61], [894, 35, 42], 800, () => {
+            this.shearerObj.traverse((child: any) => {
+                if (child.isMesh) {
+                    this.container.clickObjects.push(child)
+                }
+            })
+        })
+
+    }
+    /**
+     * 安全检测
+     */
+    intoSecurityDetection() {
+        this.returnOrigin()
+        this.cameraTween && this.cameraTween.stop();
+        this.orbitTween && this.orbitTween.stop();
+
+        this.securityStatus = true
+        this.container.sky.visible = true
+        this.mainMeshArrs.forEach(item => {
+            item.visible = true;
+            if (item.name == "xfyl") {
+                item.visible = false;
+            }
+        });
+
+        this.container.orbitControls.target.set(1908, -0, 2176)
+        this.container.orbitCamera.position.set(2553, 340, 3472)
+
+        this.tweenMoveView([1653, -0, 1315], [2304, 427, 2581], 800, () => {
+
+            this.carObjs.forEach(item => {
+                item.visible = true;
+            })
+        })
+    }
+    /**
+     * 内部场景返回状态恢复
+     */
+    returnOrigin() {
+        this.carObjs.forEach(item => {
+            item.visible = false;
+        })
+
+        if (this.mineStatus) {//矿井聚焦恢复
+            this.mineStatus = false
+        } else if (this.undergroundMineStatus) { // 矿洞聚焦恢复
+            this.undergroundMineStatus = false
+            this.undergroundMineObj.visible = false
+        } else if (this.waterPumpStatus) {// 水泵场景恢复 
+            this.waterPumpStatus = false
+            this.water.visible = false;
+            this.waterPump.visible = false;
+        } else if (this.fanStatus) {// 风机场景恢复 
+            this.fanStatus = false
+            this.fan.visible = false;
+        } else if (this.airCompressorStatus) {// 空压机场景恢复
+            this.airCompressorStatus = false
+            this.airCompressorObj.visible = false
+        } else if (this.beltConveyorStatus) {// 皮带运输机场景恢复
+            this.beltConveyorStatus = false
+            this.beltConveyorObj.visible = false
+        } else if (this.gasPumpStatus) {// 瓦斯泵场景恢复
+            this.gasPumpStatus = false
+            this.gasPumpObj.visible = false
+        } else if (this.shearerStatus) {// 采煤机场景恢复
+            this.shearerStatus = false
+            this.shearerObj.visible = false
+        } else if (this.securityStatus) {
+            this.securityStatus = false
+
+        }
+    }
+    /**
+     * 生成场景图标
+     */
+    addIcons() {
+        this.iconData.forEach((item: iconDataOpts) => {
+            const { position, url, page, size, resize, resetPosition, center, chlidUrl } = item
+            const plane = new Bol3d.POI.Icon({
+                position: position,
+                url: `3d/device/${page}/${url}.png`,
+                scale: [size[0], size[1]],
+                sizeAttenuation: true,
+                publicPath: this.PRO_ENV,
+            })
+            plane.name = url
+            plane.center.y = 0;
+            if (page != 'shaearer') this.container.attach(plane)
+            if (resize && center) {
+                const chlidPlane = new Bol3d.POI.Icon({
+                    position: resetPosition,
+                    url: `3d/device/${page}/${chlidUrl}.png`,
+                    scale: [resize[0], resize[1]],
+                    sizeAttenuation: true,
+                    publicPath: this.PRO_ENV,
+                })
+                chlidPlane.name = ('' + chlidUrl).trim()
+                chlidPlane.center = new Bol3d.Vector2(center[0], center[1]);
+                plane.add(chlidPlane)
+            }
+            if (page == 'main') {
+                this.mainPlaneObjs.push(plane)
+                this.mainClick.push(plane)
+                this.mineClick.push(plane)
+            } else {
+                plane.visible = false
+                if (page == 'peopleLocal') {
+                    this.peoplePlaneObjs.push(plane)
+                } else if (page == 'airCompressor') {
+                    this.airPlaneObjs.push(plane)
+                } else if (page == 'securityDetection') {
+                    this.securityPlaneObjs.push(plane)
+                } else if (page == 'waterPump') {
+                    this.waterPlaneObjs.push(plane)
+                } else if (page == 'shaearer') {
+                    this.shearerSonObj.add(plane)
+                } else if (page == 'gasPump') {
+                    this.gasPumpPlaneObjs.push(plane)
+                } else if (page == 'beltConveyor') {
+                    this.beltConveyorPlaneObjs.push(plane)
+                } else if (page == 'fan') {
+                    this.fanPlaneObjs.push(plane)
+                }
+            }
+        })
+    }
+    addPlaneIcon() {
+        fanPlaneData.forEach(data => {
+            const geometry = new Bol3d.PlaneGeometry(50, 15)
+            const material = new Bol3d.MeshBasicMaterial({
+                side: Bol3d.DoubleSide,
+                transparent: true,
+                map: new Bol3d.TextureLoader().load(this.PRO_ENV + `3d/device/fan/${data.url}.png`)
+            })
+            const plane = new Bol3d.Mesh(geometry, material);
+            plane.visible = false;
+            plane.name = 'fan' + data.url;
+            (plane as any).position.set(...data.position)
+            plane.renderOrder = 300;
+            (plane as any).rotation.y = -Math.PI / 2
+            this.container.attach(plane)
+            this.fanPlaneObjs.push(plane)
+        });
+    }
 }
