@@ -51,6 +51,9 @@ watch(
   () => route.path,
   (path) => {
     switch (path) {
+      case "/home":
+        if (!loading.value) sceneAPI.backMain_3d();
+        break;
       case "/drainageSystem":
         sceneAPI.intoWaterPump_3d();
         break;

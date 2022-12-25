@@ -43,4 +43,8 @@ export default class sceneAPI {
     static intoSecurityDetection_3d() {
         this.scene.intoSecurityDetection()
     }
+    // 返回主场景
+    static backMain_3d() {
+        this.scene.backMain()
+    }
 }
