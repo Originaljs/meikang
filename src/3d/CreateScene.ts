@@ -52,9 +52,16 @@ export class CreateScene {
     rightFan: any[] = []
     fjPoint: any
     fjPoint1: any
-    underClick: any
+    underClick: any[] = []
     trackMoveObj: any
     fireAnimation: any
+    minecartMove: any
+    shearerHead: any[] = []
+    warnPlaneObj!: Bol3d.Mesh
+    diffusionInterval: any
+    diffusionTween: any
+    circleObj: any[] = []
+    circletw: any[] = []
     // 内部场景状态
     mineStatus: boolean = false
     undergroundMineStatus: boolean = false
@@ -418,6 +425,7 @@ export class CreateScene {
                                     chlid.material.side = Bol3d.DoubleSide;
                                 } else if (chlid.name == "CMJ-2" || chlid.name == "CMJ-1") {
                                     this.addOutLine(chlid, 0x8dcbff);
+                                    this.shearerHead.push(chlid)
                                 } else if (chlid.name == "CMJ_(1)") {
                                     chlid.material.metalness = 0.6;
                                     chlid.material.envMapIntensity = 0.5;
@@ -449,7 +457,20 @@ export class CreateScene {
                         this.minecartTransportObj = item
                         item.traverse((chlid: any) => {
                             if (chlid.isMesh) {
-
+                                if (chlid.name == "图形001_3") {
+                                    chlid.material.metalness = 0.7;
+                                } else if (chlid.name == "CMJ-CJ-005") {
+                                    chlid.material.roughness = 1;
+                                } else if (chlid.name == "CMJ-CJ-006") {
+                                    chlid.material.roughness = 0.4;
+                                    chlid.material.metalness = 1;
+                                    this.addOutLine(chlid, 0xffffff);
+                                }
+                            }
+                            if (chlid.type == "Group") {
+                                if (chlid.name == "图形001") {
+                                    this.minecartMove = chlid;
+                                }
                             }
                         })
 
@@ -471,12 +492,14 @@ export class CreateScene {
                     this.addIcons()
                     this.addPlaneIcon()
                     this.addPointLight()
+                    this.addWarnPlane()
+                    this.towPointMove()
                     this.addMouseEevent();
                     [this.reflectRttObj, this.reflectFrame, this.groundMirrorMaterial] = this.mirrorGroud([5000, 5000], 0, -Math.PI / 2, [0, -100, 0])
                     this.water = this.addWater([100, 100], 0x68b6d7, -Math.PI / 2, [-23, 0, 170], [6.43, 2.85, 1])
                     this.mainClick.push(this.container.sky)
                     this.mineClick.push(this.container.sky)
-                    // this.underClick.push(container.sky)
+                    this.underClick.push(this.container.sky)
                     this.container.clickObjects = this.mainClick
                     this.addSceneAnimation()
                     setTimeout(() => {
@@ -669,6 +692,11 @@ export class CreateScene {
             if (this.beltConveyorStatus) {
                 this.trackMoveObj.material.map.offset.x -= 0.01
             }
+            if (this.shearerStatus) {
+                this.shearerHead.forEach(item => {
+                    item.rotateOnAxis(item.position.clone().set(0, 0, 1), 0.06)
+                })
+            }
 
         }
         render()
@@ -725,18 +753,23 @@ export class CreateScene {
 
         this.landObj.visible = true;
         (this.landObj as any).position.y = 20
-
-        // this.landObj.visible = true;
         this.undergroundMineObj.visible = true
         this.tweenMoveView([-66, 0, 32], [-238, 262, 387], 800, () => {
+            this.towPointNow()
+            this.circleObj.forEach((item) => {
+                item.visible = true
+                item.children[0].visible = true
+            })
             this.peoplePlaneObjs.forEach(item => {
                 if (item.name == "people警告") {
                     item.children[0].visible = false;
                 }
                 item.visible = true
-            })
-
-            this.container.clickObjects = [...this.peoplePlaneObjs]
+            });
+            (this.warnPlaneObj as any).position.set(60.73, 46, 136.93);
+            this.warnPlaneObj.visible = true;
+            this.diffusionWarn(20);
+            this.container.clickObjects = [...this.underClick, ...this.peoplePlaneObjs]
         })
     }
     /**
@@ -914,6 +947,7 @@ export class CreateScene {
         this.mainMeshArrs.forEach(item => {
             item.visible = false;
         });
+        this.reflectRttObj.visible = false
         this.shearerObj.visible = true;
         this.tweenMoveView([1088, 0, -61], [894, 35, 42], 800, () => {
             this.shearerObj.traverse((child: any) => {
@@ -974,6 +1008,13 @@ export class CreateScene {
             this.undergroundMineStatus = false
             this.landObj.visible = false;
             this.undergroundMineObj.visible = false
+            this.circleObj.forEach((item) => {
+                item.visible = false
+                item.children[0].visible = false
+            })
+            this.circletw.forEach(item => {
+                item && item.stop()
+            })
             this.peoplePlaneObjs.forEach(item => {
                 item.visible = false
             })
@@ -1144,9 +1185,9 @@ export class CreateScene {
      * @param color 
      */
     addOutLine(obj: any, color: string | number, opacity?: number) {
-        let geometry = obj.geometry.clone();
-        let edges = new Bol3d.EdgesGeometry(geometry);
-        let line = new Bol3d.LineSegments(edges, new Bol3d.LineBasicMaterial({ color: color }));
+        const geometry = obj.geometry.clone();
+        const edges = new Bol3d.EdgesGeometry(geometry);
+        const line = new Bol3d.LineSegments(edges, new Bol3d.LineBasicMaterial({ color: color }));
         // (line as any).scale.copy(obj.scale.clone());
         // (line as any).position.copy(obj.position.clone());
         // (line as any).rotation.copy(obj.rotation.clone());
@@ -1188,5 +1229,116 @@ export class CreateScene {
         this.fjPoint1.position.set(614.07, 90, 61.62);
         this.fjPoint1.visible = false;
         this.container.attach(this.fjPoint1);
+    }
+    /**
+     * 生成报警片
+     */
+    addWarnPlane() {
+        const geometry = new Bol3d.PlaneGeometry(1, 1);
+        const material = new Bol3d.MeshBasicMaterial({ side: Bol3d.DoubleSide, transparent: true, map: new Bol3d.TextureLoader().load(this.PRO_ENV + "3d/device/peopleLocal/警告底.png") });
+        const plane = new Bol3d.Mesh(geometry, material);
+        (plane as any).rotation.x = -Math.PI / 2;
+        plane.visible = false;
+        this.warnPlaneObj = plane;
+        this.container.attach(plane);
+    }
+    /**
+     * 
+     * @param size 警告片圆缩放尺寸
+     */
+    diffusionWarn(size: number) {
+        (this.warnPlaneObj as any).scale.set(1, 1, 1)
+        this.diffusionInterval && clearInterval(this.diffusionInterval);
+        this.diffusionTween && this.diffusionTween.stop();
+        this.diffusionTween = new Bol3d.TWEEN.Tween(this.warnPlaneObj)
+            .to({ scale: new Bol3d.Vector3(size, size, size) }, 2900)
+            .start()
+            .onComplete(() => {
+                (this.warnPlaneObj as any).scale.set(1, 1, 1)
+            });
+        this.diffusionInterval = setInterval(() => {
+            this.diffusionTween = new Bol3d.TWEEN.Tween(this.warnPlaneObj)
+                .to({ scale: new Bol3d.Vector3(size, size, size) }, 2900)
+                .start()
+                .onComplete(() => {
+                    (this.warnPlaneObj as any).scale.set(1, 1, 1)
+                });
+        }, 3000);
+    }
+    towPointMove() {
+        const geometry = new Bol3d.CircleGeometry(3, 32);
+        const material = new Bol3d.MeshBasicMaterial({ color: 0xffff00 });
+        const circle = new Bol3d.Mesh(geometry, material);
+        circle.visible = false;
+
+        const geometry1 = new Bol3d.CircleGeometry(3, 32);
+        const materia1l = new Bol3d.MeshBasicMaterial({ color: 0xffff00 });
+        const circle1 = new Bol3d.Mesh(geometry1, materia1l);
+        circle1.visible = false;
+        this.container.attach(circle);
+        this.container.attach(circle1);
+        const plane = new Bol3d.POI.Popup3DR({
+            value: `<div class='planeBox'>
+                <div class='titleName'>周兴新</div>
+                <div class='lineName'>工作时长：<span class='lineText'>2.4小时</span></div>
+                <div class='lineName'><span class='textF'>标</span><span class='textF'>签</span><span>号</span>：<span class='lineText'>ks-124114</span></div>
+                <div class='lineName'>状${'&#160;&#160;&#160;&#160;&#160;&#160;&#160;'}态：<span class='lineText'>正常</span></div>
+            </div>`,
+            position: [0, 20, 0],
+            className: 'carPlaneUp',
+            closeVisible: 'hidden',
+            scale: [0.2, 0.2, 0.2],
+            rotation: [0, 0, 0]
+        })
+        plane.visible = false
+        circle.add(plane);
+        const plane1 = new Bol3d.POI.Popup3DR({
+            value: `<div class='planeBox'>
+                <div class='titleName'>邹星星</div>
+                <div class='lineName'>工作时长：<span class='lineText'>5.4小时</span></div>
+                <div class='lineName'><span class='textF'>标</span><span class='textF'>签</span><span>号</span>：<span class='lineText'>ks-124116</span></div>
+                <div class='lineName'>状${'&#160;&#160;&#160;&#160;&#160;&#160;&#160;'}态：<span class='lineTextRed'>报警</span></div>
+            </div>`,
+            position: [0, 20, 0],
+            className: 'carPlaneUp',
+            closeVisible: 'hidden',
+            scale: [0.2, 0.2, 0.2],
+            rotation: [0, 0, 0]
+        })
+        plane1.visible = false
+        circle1.add(plane1);
+        this.circleObj.push(circle, circle1)
+        setInterval(() => {
+            circle.lookAt(this.container.orbitCamera.position.clone());
+        }, 20);
+        setInterval(() => {
+            circle1.lookAt(this.container.orbitCamera.position.clone());
+        }, 20);
+    }
+    towPointNow() {
+        this.circletw[0] && this.circletw[0].stop()
+        this.circletw[1] && this.circletw[1].stop()
+
+        this.circleObj[0].position.set(392.99, 48, 88.78)
+        this.circleObj[1].position.set(212.41, 36, -29.06)
+        this.circletw[0] = new Bol3d.TWEEN.Tween(this.circleObj[0])
+            .to({ position: new Bol3d.Vector3(145.75, 48, 88.78) }, 14000)
+            .start()
+            .onComplete(() => {
+                this.circletw[0] = new Bol3d.TWEEN.Tween(this.circleObj[0])
+                    .to({ position: new Bol3d.Vector3(392.99, 48, 88.78) }, 14000)
+                    .start()
+            });
+        this.circletw[1] = new Bol3d.TWEEN.Tween(this.circleObj[1])
+            .to({ position: new Bol3d.Vector3(382.99, 41, -29.37) }, 14000)
+            .start()
+            .onComplete(() => {
+                this.circletw[0] = new Bol3d.TWEEN.Tween(this.circleObj[1])
+                    .to({ position: new Bol3d.Vector3(212.41, 36, -29.06) }, 14000)
+                    .start()
+                    .onComplete(() => {
+                        this.towPointNow();
+                    })
+            });
     }
 }
