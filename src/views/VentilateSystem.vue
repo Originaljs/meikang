@@ -97,12 +97,20 @@
         ></chart-define
       ></card-chunk>
     </section>
+    <div
+      :class="['fixed_bottom', showActive ? 'active' : '']"
+      @click="
+        off_on();
+        showActive = !showActive;
+      "
+    ></div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { markRaw } from "vue";
 import { echart } from "@/unitls/chartOptions";
+import { ref } from "vue";
 const monitorList = markRaw([
   {
     title: "电机非驱动...",
@@ -135,6 +143,8 @@ const monitorList = markRaw([
     color: "yellow",
   },
 ]);
+const showActive = ref(true);
+const off_on = () => {};
 </script>
 
 <style scoped lang="less">
@@ -372,6 +382,16 @@ const monitorList = markRaw([
         }
       }
     }
+  }
+}
+.fixed_bottom {
+  width: 1.125rem;
+  height: 0.4625rem;
+  background: url("@/assets/image/ventilate/关闭.png") no-repeat center /
+    100%;
+  &.active {
+    background: url("@/assets/image/ventilate/开启.png") no-repeat center /
+      100%;
   }
 }
 @keyframes bounce {

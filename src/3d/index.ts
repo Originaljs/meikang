@@ -47,4 +47,8 @@ export default class sceneAPI {
     static backMain_3d() {
         this.scene.backMain()
     }
+    // 矿车开采移动动画
+    static shaearerAnimation_3d(type: boolean) {
+        this.scene.shaearerAnimation(type)
+    }
 }

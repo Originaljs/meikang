@@ -246,6 +246,13 @@ watch(
     }
   }
 }
+.fixed_bottom {
+  position: fixed;
+  bottom: 2.15rem;
+  right: 5.525rem;
+  z-index: 2;
+  pointer-events: all;
+}
 @keyframes tzdouce {
   0% {
     transform: translateY(0rem);

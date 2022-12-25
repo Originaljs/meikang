@@ -124,7 +124,7 @@
                   <td class="td">{{ index + 1 }}</td>
                   <td class="td">{{ item.name }}</td>
                   <td class="td">{{ item.cause }}</td>
-                  <td class="td" style="color: #FF9A26;">{{ item.time }}</td>
+                  <td class="td" style="color: #ff9a26">{{ item.time }}</td>
                 </tr>
               </tbody>
             </table>
@@ -132,12 +132,27 @@
         </mar-quee>
       </card-chunk>
     </section>
+    <div
+      :class="['fixed_bottom', showActive ? '' : 'active']"
+      @click="
+        off_on();
+        showActive = !showActive;
+      "
+    ></div>
   </div>
 </template>
 <script lang="ts" setup>
 import { echart } from "@/unitls/chartOptions";
-import { shallowRef } from "vue";
+import { shallowRef, ref } from "vue";
 import MarQuee from "@/components/chart/MarQuee.vue";
+const showActive = ref(true);
+const off_on = () => {
+  if (showActive.value) {
+    // intoBeltConveyor_3d()
+  } else {
+    // intoMinecartTransport_3d()
+  }
+};
 const speedList = shallowRef([
   {
     name: "八采大皮1#",
@@ -395,6 +410,15 @@ const dataList = shallowRef([
   }
   .tbody {
     position: absolute;
+  }
+}
+.fixed_bottom {
+  width: 1.5125rem;
+  height: 0.4625rem;
+  background: url("@/assets/image/transport/pidai.png") no-repeat center / 100%;
+  &.active {
+    background: url("@/assets/image/transport/kuangche.png") no-repeat center /
+      100%;
   }
 }
 </style>

@@ -76,6 +76,12 @@ export class CreateScene {
     reflectRttObj: any
     reflectFrame: any
     groundMirrorMaterial: any
+    // 矿车开采
+    shaearerInterval: any
+    shaearerTimeout: any
+    shaearerTween1: any
+    shaearerTween2: any
+    shaearerDirce = true
     /**
      * @param publicUrl 3d static resource path
      */
@@ -979,6 +985,9 @@ export class CreateScene {
         this.container.orbitCamera.position.set(2553, 340, 3472)
 
         this.tweenMoveView([1653, -0, 1315], [2304, 427, 2581], 800, () => {
+            (this.warnPlaneObj as any).position.set(1351.71, 166, 345.64);
+            this.warnPlaneObj.visible = true;
+            this.diffusionWarn(40);
             this.securityPlaneObjs.forEach(item => {
                 item.children[0].visible = false;
                 item.visible = true
@@ -1012,12 +1021,14 @@ export class CreateScene {
                 item.visible = false
                 item.children[0].visible = false
             })
-            this.circletw.forEach(item => {
-                item && item.stop()
-            })
             this.peoplePlaneObjs.forEach(item => {
                 item.visible = false
             })
+            this.circletw.forEach(item => {
+                item && item.stop()
+            })
+            this.diffusionInterval && clearInterval(this.diffusionInterval);
+            this.diffusionTween && this.diffusionTween.stop();
         } else if (this.waterPumpStatus) {// 水泵场景恢复 
             this.waterPumpStatus = false
             this.water.visible = false;
@@ -1064,7 +1075,10 @@ export class CreateScene {
         } else if (this.shearerStatus) {// 采煤机场景恢复
             this.shearerStatus = false
             this.shearerObj.visible = false
-        } else if (this.securityStatus) {
+        } else if (this.securityStatus) { // 安全检测场景恢复
+            this.diffusionInterval && clearInterval(this.diffusionInterval);
+            this.diffusionTween && this.diffusionTween.stop();
+            this.warnPlaneObj.visible = false;
             this.securityStatus = false
             this.securityPlaneObjs.forEach(item => {
                 item.visible = false;
@@ -1340,5 +1354,64 @@ export class CreateScene {
                         this.towPointNow();
                     })
             });
+    }
+    /**
+     * 矿车开采移动动画
+     * @param type 
+     */
+    shaearerAnimation(type: boolean) {
+        if (type) {
+            let distance = 0;
+            if (this.shaearerDirce) {
+                distance = 250 - this.shearerSonObj.position.x;
+            } else {
+                distance = this.shearerSonObj.position.x - 150;
+            }
+            this.shaearerTween1 = new Bol3d.TWEEN.Tween(this.shearerSonObj.position)
+                .to({ x: this.shaearerDirce ? 250 : 150 }, distance * 150)
+                .start()
+                .onComplete(() => {
+                    this.shaearerDirce = !this.shaearerDirce;
+                    this.shaearerTween2 = new Bol3d.TWEEN.Tween(this.shearerSonObj.position)
+                        .to({ x: this.shaearerDirce ? 250 : 150 }, 15000)
+                        .start()
+                        .onComplete(() => {
+                            this.shaearerDirce = !this.shaearerDirce;
+                        })
+                });
+            this.shaearerTimeout = setTimeout(() => {
+                this.shaearerTween1 = new Bol3d.TWEEN.Tween(this.shearerSonObj.position)
+                    .to({ x: this.shaearerDirce ? 250 : 150 }, 15000)
+                    .start()
+                    .onComplete(() => {
+                        this.shaearerDirce = !this.shaearerDirce;
+                        this.shaearerTween2 = new Bol3d.TWEEN.Tween(this.shearerSonObj.position)
+                            .to({ x: this.shaearerDirce ? 250 : 150 }, 15000)
+                            .start()
+                            .onComplete(() => {
+                                this.shaearerDirce = !this.shaearerDirce;
+                            })
+                    });
+                this.shaearerInterval = setInterval(() => {
+                    this.shaearerTween1 = new Bol3d.TWEEN.Tween(this.shearerSonObj.position)
+                        .to({ x: this.shaearerDirce ? 250 : 150 }, 15000)
+                        .start()
+                        .onComplete(() => {
+                            this.shaearerDirce = !this.shaearerDirce;
+                            this.shaearerTween2 = new Bol3d.TWEEN.Tween(this.shearerSonObj.position)
+                                .to({ x: this.shaearerDirce ? 250 : 150 }, 15000)
+                                .start()
+                                .onComplete(() => {
+                                    this.shaearerDirce = !this.shaearerDirce;
+                                })
+                        });
+                }, 30500);
+            }, distance * 150 + 15500);
+        } else {
+            this.shaearerInterval && clearInterval(this.shaearerInterval);
+            this.shaearerTimeout && clearTimeout(this.shaearerTimeout);
+            this.shaearerTween1 && this.shaearerTween1.stop();
+            this.shaearerTween2 && this.shaearerTween2.stop();
+        }
     }
 }

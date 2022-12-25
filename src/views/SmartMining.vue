@@ -128,11 +128,44 @@
         </div>
       </card-chunk>
     </section>
+    <div class="fixed_bottom">
+      <div
+        :class="['item1', showScene ? '' : 'active']"
+        @click="showScene = !showScene"
+      ></div>
+      <div
+        :class="['item', showActive ? 'active' : '']"
+        @click="
+          showActive = !showActive;
+          off_on();
+        "
+      ></div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { echart } from "@/unitls/chartOptions";
+import { ref, watch } from "vue";
+const showActive = ref(true);
+const showScene = ref(false);
+const off_on = () => {
+  console.log(showActive.value);
+  if (showScene.value) {
+    // JMJAnimationOn_3d(!showActive.value)
+  } else {
+    // shaearerAnimation_3d(!showActive.value);
+  }
+};
+watch(showScene, (val) => {
+  if (val) {
+    // intoJMJ_3d()
+    // JMJAnimationOn_3d(!showActive.value);
+  } else {
+    // intoShearer_3d()
+    // shaearerAnimation_3d(!showActive.value);
+  }
+});
 </script>
 
 <style scoped lang="less">
@@ -357,5 +390,30 @@ import { echart } from "@/unitls/chartOptions";
   font-size: 0.22rem;
   line-height: 0.3rem;
   top: 0.25rem;
+}
+.fixed_bottom {
+  .item,
+  .item1 {
+    width: 1.5125rem;
+    height: 0.4625rem;
+    cursor: pointer;
+  }
+  .item {
+    margin-top: 0.1375rem;
+    background: url("@/assets/image/smartMining/关闭.png") no-repeat center /
+      100%;
+    &.active {
+      background: url("@/assets/image/smartMining/开启.png") no-repeat center /
+        100%;
+    }
+  }
+  .item1 {
+    background: url("@/assets/image/smartMining/煤矿机开采场景.png") no-repeat
+      center / 100%;
+    &.active {
+      background: url("@/assets/image/smartMining/掘锚机开采场景.png") no-repeat
+        center / 100%;
+    }
+  }
 }
 </style>
