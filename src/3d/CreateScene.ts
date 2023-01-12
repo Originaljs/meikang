@@ -2,6 +2,60 @@ import * as Bol3d from './main'
 import '@/assets/css/3d_index.css'
 import { iconData, iconDataOpts, fanPlaneData } from './iconData'
 
+const vshader =/*glsl*/ `
+varying vec2 vUv;
+void main() {	
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+`
+const fshader = /*glsl*/`
+#define PI 3.141592653589
+#define PI2 6.28318530718
+
+uniform vec2 u_mouse;
+uniform vec2 u_resolution;
+uniform sampler2D u_tex;
+uniform float u_time;
+
+varying vec2 vUv;
+//Based on http://clockworkchilli.com/blog/8_a_fire_shader_in_glsl_for_your_webgl_games
+void main (void)
+{
+  vec2 noise = vec2(0.0);
+  float time = u_time;
+
+  // Generate noisy x value
+  vec2 uv = vec2(vUv.x*1.4 + 0.01, fract(vUv.y - time*0.69));
+  noise.x = (texture2D(u_tex, uv).w-0.5)*2.0;
+  uv = vec2(vUv.x*0.5 - 0.033, fract(vUv.y*2.0 - time*0.12));
+  noise.x += (texture2D(u_tex, uv).w-0.5)*2.0;
+  uv = vec2(vUv.x*0.94 + 0.02, fract(vUv.y*3.0 - time*0.61));
+  noise.x += (texture2D(u_tex, uv).w-0.5)*2.0;
+  
+  // Generate noisy y value
+  uv = vec2(vUv.x*0.7 - 0.01, fract(vUv.y - time*0.27));
+  noise.y = (texture2D(u_tex, uv).w-0.5)*2.0;
+  uv = vec2(vUv.x*0.45 + 0.033, fract(vUv.y*1.9 - time*0.61));
+  noise.y = (texture2D(u_tex, uv).w-0.5)*2.0;
+  uv = vec2(vUv.x*0.8 - 0.02, fract(vUv.y*2.5 - time*0.51));
+  noise.y += (texture2D(u_tex, uv).w-0.5)*2.0;
+  
+  noise = clamp(noise, -1.0, 1.0);
+
+  float perturb = (1.0 - vUv.y) * 0.35 + 0.02;
+  noise = (noise * perturb) + vUv - 0.02;
+
+  vec4 color = texture2D(u_tex, noise);
+  color = vec4(color.r*2.0, color.g*0.9, (color.g/color.r)*0.2, 1.0);
+  noise = clamp(noise, 0.05, 1.0);
+  color.a = texture2D(u_tex, noise).b*2.0;
+  color.a = color.a*texture2D(u_tex, vUv).b;
+
+  gl_FragColor = color;
+}
+`
+
 type CarOptions = {
     title: string,
     text1: string,
@@ -62,6 +116,11 @@ export class CreateScene {
     diffusionTween: any
     circleObj: any[] = []
     circletw: any[] = []
+    JMJWaterMist: any[] = []
+    JMJRoller: any
+    JMJXinlun: any[] = []
+    JMJArms: any
+    uniforms: any
     // 内部场景状态
     mineStatus: boolean = false
     undergroundMineStatus: boolean = false
@@ -88,6 +147,12 @@ export class CreateScene {
     constructor(publicUrl: string) {
         this.PRO_ENV = publicUrl
         this.lightMapBG = new Bol3d.TextureLoader().load(publicUrl + "3d/1.png")
+        this.uniforms = {
+            u_tex: { value: new Bol3d.TextureLoader().load(this.PRO_ENV + '3d/flame.png') },
+            u_time: { value: 0.0 },
+            u_mouse: { value: { x: 0.0, y: 0.0 } },
+            u_resolution: { value: { x: 0, y: 0 } }
+        }
     }
     /**
      * @param dom 3D scene container
@@ -293,7 +358,14 @@ export class CreateScene {
                                 } else if (chlid.name == "LTK-3") {
                                     this.mineClick.push(chlid)
                                 } else if (chlid.name == "Box003") {
-                                    console.log(chlid)
+                                    chlid.material = new Bol3d.ShaderMaterial({
+                                        uniforms: this.uniforms,
+                                        vertexShader: vshader,
+                                        fragmentShader: fshader,
+                                        transparent: true,
+                                        side: Bol3d.DoubleSide
+                                    });
+                                    chlid.renderOrder = 1000;
                                 }
                             }
                             if (chlid.type == "Group") {
@@ -454,7 +526,46 @@ export class CreateScene {
                         this.JMJObj = item
                         item.traverse((chlid: any) => {
                             if (chlid.isMesh) {
-
+                                if (chlid.name.includes("Wu_")) {
+                                    this.JMJWaterMist.push(chlid)
+                                    this.setOpacityMaterial(chlid);
+                                } else if (chlid.name == "QiGe_01") {
+                                    this.addOutLine(chlid, 0xffffff, 0.3)
+                                    chlid.material.metalness = 0.4
+                                } else if (chlid.name == "cheti001" || chlid.name == "cheti002_1" || chlid.name == "cheti003_1") {
+                                    this.addOutLine(chlid, 0xffffff, 0.3)
+                                    chlid.material.metalness = 0.4
+                                } else if (chlid.name == "shuidao002" || chlid.name == "shuidao001") {
+                                    chlid.material.roughness = 1;
+                                    chlid.material.envMapIntensity = 1.0
+                                } else if (chlid.name == "shuidao004") {
+                                    chlid.material.roughness = 1;
+                                    chlid.material.envMapIntensity = 1
+                                    chlid.material.transparent = true;
+                                    chlid.material.opacity = 0.6
+                                }
+                            }
+                            if (chlid.type == "Object3D") {
+                                if (chlid.name == "GunTong") {
+                                    this.JMJRoller = chlid;
+                                    chlid.traverse((dev: any) => {
+                                        if (dev.isMesh) {
+                                            this.addOutLine(dev, 0x8dcbff)
+                                        }
+                                    })
+                                } else if (chlid.name == "Pan") {
+                                    chlid.traverse((dev: any) => {
+                                        if (dev.isMesh) {
+                                            this.addOutLine(dev, 0x8dcbff)
+                                            if (dev.name == "XuanZ_01" || dev.name == "XuanZ_02") {
+                                                this.JMJXinlun.push(dev);
+                                            }
+                                        }
+                                    })
+                                } else if (chlid.name == "QiGe") {
+                                    chlid.rotation.z = 0.4
+                                    this.JMJArms = chlid;
+                                }
                             }
                         })
 
@@ -535,6 +646,15 @@ export class CreateScene {
         };
         events.onhover = (e: any) => {
             let name = e.objects[0].object.name;
+            if (name.includes("LTK-") && !this.mineStatus) {
+                this.container.outlineObjects = [this.oulineForKD, this.oulineForKD1]
+            } else if (name == "LTK-3" && this.mineStatus) {
+                this.container.outlineObjects = [e.objects[0].object, this.oulineForKD1]
+            } else if (name == "JXKD-003" && this.undergroundMineStatus) {
+                this.container.outlineObjects = [e.objects[0].object]
+            } else {
+                this.container.outlineObjects = [this.oulineForKD1]
+            }
 
         };
         // 实时获取位置
@@ -688,7 +808,8 @@ export class CreateScene {
         const clock = new Bol3d.Clock();
         const render = () => {
             requestAnimationFrame(render)
-                ; (this.water as any).material.uniforms["time"].value += 1.0 / 60.0;
+            this.uniforms.u_time.value += clock.getDelta();
+            ; (this.water as any).material.uniforms["time"].value += 1.0 / 60.0;
             this.landLine.material.map.offset.y -= 0.01;
             this.carLTs.forEach(item => {
                 item.rotateOnAxis(item.position.clone().set(0, 1, 0), 0.06)
@@ -1414,4 +1535,71 @@ export class CreateScene {
             this.shaearerTween2 && this.shaearerTween2.stop();
         }
     }
+
+    // 透明度渐变 shader
+    setOpacityMaterial(object: any) {
+        // 确定oject的geometry的box size
+        // 计算当前几何体的的边界矩形，该操作会更新已有 [param:.boundingBox]。
+        // 边界矩形不会默认计算，需要调用该接口指定计算边界矩形，否则保持默认值 null。
+        object.geometry.computeBoundingBox();
+        object.geometry.computeBoundingSphere();
+
+        const { geometry } = object;
+        const { max, min } = geometry.boundingBox;
+        const size = new Bol3d.Vector3(max.x - min.x, max.y - min.y, max.z - min.z);
+
+        this.forMaterial(object.material, (material: any) => {
+            material.transparent = true;
+            // material.color.set(0xfff000);
+            material.onBeforeCompile = (shader: any) => {
+                shader.uniforms.uSize = {
+                    value: size,
+                };
+
+                const fragment = /* glsl */ `
+                varying vec3 vPosition;
+                uniform vec3 uSize;
+  
+                void main() {
+            `;
+                const fragmentColor = /* glsl */ `
+                vec3 distColor = outgoingLight;
+                float aop = diffuseColor.a;
+  
+                float opac = 1.0 - vPosition.y / uSize.y;
+                gl_FragColor = vec4(distColor,  aop *= opac);
+            `;
+                shader.fragmentShader = shader.fragmentShader.replace(
+                    "void main() {",
+                    fragment
+                );
+                shader.fragmentShader = shader.fragmentShader.replace(
+                    "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
+                    fragmentColor
+                );
+
+                const vertex = /* glsl */ `
+                varying vec3 vPosition;
+                void main() {
+                    vPosition = position;
+            `;
+                shader.vertexShader = shader.vertexShader.replace(
+                    "void main() {",
+                    vertex
+                );
+            };
+        });
+    };
+
+    // 获取元素材质
+    forMaterial(materials: any, callback: Function) {
+        if (!callback || !materials) return false;
+        if (Array.isArray(materials)) {
+            materials.forEach((mat) => {
+                callback(mat);
+            });
+        } else {
+            callback(materials);
+        }
+    };
 }
